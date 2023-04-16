@@ -5,7 +5,7 @@ library(forecast)
 
 rm(list=ls())
 getwd()
-setwd("E:/2021´º¼¾Ñ§ÆÚ/Ê±¼äĞòÁĞ·ÖÎö/×÷Òµ/´ó×÷Òµ")
+setwd("E:/2021æ˜¥å­£å­¦æœŸ/æ—¶é—´åºåˆ—åˆ†æ/ä½œä¸š/å¤§ä½œä¸š")
 data1=read.csv("data_inland.csv",header=F)
 colnames(data1)=c("Domestic Passenger Traffic")
 head(data1)
@@ -17,12 +17,12 @@ series1[which.min(series1)]
 
 win.graph(width=7,height=3)
 plot(series1,type='o',main="Domestic Passenger Traffic",ylab="Amount")
-#ADF¼ìÑé
+#ADFæ£€éªŒ
 summary(ur.df(log(series2),type="drift",lags =12,selectlags = "AIC") )
 model0=lm(series2~time(series2))
 detectAO(model1)
 detectIO(model1)
-#ÔÚ2020Äê¸½½ü´æÔÚÃ÷ÏÔµÄÒì³£Öµ£¬ÏÈÓÃÇ°ÃæµÄÊı¾İ¹À¼ÆÄ£ĞÍ
+#åœ¨2020å¹´é™„è¿‘å­˜åœ¨æ˜æ˜¾çš„å¼‚å¸¸å€¼ï¼Œå…ˆç”¨å‰é¢çš„æ•°æ®ä¼°è®¡æ¨¡å‹
 series2=window(series1,end=c(2018,2))
 plot(series2,type='o',main="Domestic Passenger Traffic",ylab="Amount")
 win.graph(width=7,height=3)
@@ -30,14 +30,14 @@ Month=c("1","2","3","4","5","6","7","8","9","O","N","D")
 plot(window(series1,end=c(2010,2)),main="Domestic Passenger Traffic",ylab="Amount")
 points(window(series1,end=c(2010,2)),pch=Month)
 
-#È·¶¨ĞÔÇ÷ÊÆ
+#ç¡®å®šæ€§è¶‹åŠ¿
 month.=season(series2)
 model1=lm(series2~time(series2)+month.)
 summary(model1)
 plot(rstudent(model1),xlab='Time',ylab='Standardized Residuals',
      main='Standardized Residuals of model1',type='o')
 
-#µÃµ½Æ½ÎÈÊı¾İ
+#å¾—åˆ°å¹³ç¨³æ•°æ®
 plot(log(series2),type='o',main="log(Domestic Passenger Traffic)",ylab="Amount")
 plot(diff(log(series2)),type='o',
      main="difference of log(Domestic Passenger Traffic)",ylab="Amount")
@@ -49,7 +49,7 @@ points(diff(diff(log(window(series1,end=c(2010,2)))),lag=12),pch=Month)
 summary(ur.df(diff(diff(log(series2)),lag=12),type="drift",lags =12,selectlags = "AIC") )
 
 
-#Ä£ĞÍÊ¶±ğ
+#æ¨¡å‹è¯†åˆ«
 win.graph(width=4,height=4)
 acf(as.numeric(log(series2)),ci.type='ma',main='log(series2)',xaxp=c(0,20,10))
 acf(as.numeric(diff(log(series2))),ci.type='ma',
@@ -75,7 +75,7 @@ plot(res)
 
 ar(diff(diff(log(series2)),lag=24))
 
-#Ä£ĞÍ²ÎÊı¹À¼Æ
+#æ¨¡å‹å‚æ•°ä¼°è®¡
 model2=arima(log(series2),order=c(2,1,0),seasonal=list(order=c(0,1,0),period=24))
 model2
 model3=arima(log(series2),order=c(0,1,2),seasonal=list(order=c(0,1,0),period=24))
@@ -91,7 +91,7 @@ model7
 model8=arima(log(series2),order=c(0,1,1),seasonal=list(order=c(0,1,1),period=12))
 model8
 
-#Ä£ĞÍÕï¶Ï
+#æ¨¡å‹è¯Šæ–­
 win.graph(width=7,height=7)
 tsdiag(model7)
 tsdiag(model8)
@@ -103,7 +103,7 @@ qqnorm(residuals(model8))
 qqline(residuals(model8))
 shapiro.test(residuals(model8))
 
-#Ô¤²â
+#é¢„æµ‹
 win.graph(width=7,height=4)
 result=plot(model7,n.ahead=24,type='b',xlab='Time',ylab='Amount',main='Predict form 2018.3 to 2020.2')
 abline(h=coef(model7)[names(coef(model7))=='intercept'])
@@ -116,14 +116,14 @@ ci.up=exp(result$upi)
 ci.down=exp(result$lpi)
 cbind(real,ci.down,predict,ci.up)
 
-#Òì³£Öµ
-#¸ÉÈÅ·ÖÎö
+#å¼‚å¸¸å€¼
+#å¹²æ‰°åˆ†æ
 model9=arimax(log(series1),order=c(1,1,1),seasonal=list(order=c(0,1,1),period=12),
   xtransf=data.frame(p1=1*(seq(series1)==169),p2=1*(seq(series1)==169)),
   transfer=list(c(0,0),c(1,0)),method='ML')
 model9
 
-#Òì³£Öµ¼ìÑé
+#å¼‚å¸¸å€¼æ£€éªŒ
 detectAO(model9)
 detectIO(model9)
 m1=arimax(log(series1),order=c(1,1,1),seasonal=list(order=c(0,1,1),period=12),
@@ -151,7 +151,7 @@ m4=arimax(log(series1),order=c(1,1,1),seasonal=list(order=c(0,1,1),period=12),
 detectAO(m4)
 detectIO(m4)
 
-#Ó°ÏìºÎÊ±»áÏûÊ§
+#å½±å“ä½•æ—¶ä¼šæ¶ˆå¤±
 win.graph(width=7,height=4)
 p=1*(seq(series1)==169)
 plot(ts(p*(0.0366)+ filter(p,filter=0.6419,method='recursive',side=1)*(-1.9037),
